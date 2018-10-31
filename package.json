@@ -1,0 +1,26 @@
+{
+  "name": "workshop-tdd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "unit-testing": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "mock-require": "^3.0.2",
+    "rewire": "^4.0.1",
+    "should": "^13.2.3",
+    "should-sinon": "0.0.6",
+    "sinon": "^7.1.1"
+  },
+  "dependencies": {
+    "fs-extra": "^7.0.0"
+  }
+}
