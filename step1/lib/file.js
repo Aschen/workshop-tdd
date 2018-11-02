@@ -1,9 +1,12 @@
 const
+  path = require('path'),
   fs = require('fs-extra');
 
 class File {
-  constructor (path) {
-    this.path = path;
+  constructor (filePath) {
+    this.path = filePath;
+    this.name = path.basename(filePath);
+    this.ext = path.extname(filePath);
   }
 
   async read () {

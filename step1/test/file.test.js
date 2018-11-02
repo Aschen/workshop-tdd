@@ -9,12 +9,12 @@ require('should-sinon');
 describe('File', () => {
   let
     File,
-    consoleStub,
-    processStub,
-    fsStub;
+    consoleMock,
+    processMock,
+    fsMock;
 
   beforeEach(() => {
-    fsStub = {
+    fsMock = {
       readFile: sinon.stub().resolves(),
       access: sinon.stub().resolves(),
       writeFile: sinon.stub().resolves(),
@@ -24,19 +24,19 @@ describe('File', () => {
       }
     };
 
-    consoleStub = {
+    consoleMock = {
       error: sinon.stub()
     };
 
-    processStub = {
+    processMock = {
       exit: sinon.stub()
     };
 
-    mockrequire('fs-extra', fsStub);
+    mockrequire('fs-extra', fsMock);
 
     File = rewire('../lib/file');
-    File.__set__('console', consoleStub);
-    File.__set__('process', processStub);
+    File.__set__('console', consoleMock);
+    File.__set__('process', processMock);
   });
 
   afterEach(() => {
@@ -47,26 +47,26 @@ describe('File', () => {
 
     // Simple stub
     it('read the file content', async () => {
-      fsStub.readFile.resolves('puts "Hello"');
+      fsMock.readFile.resolves('puts "Hello"');
       const file = new File('./path/to/file.rb');
 
       await file.read();
 
-      should(fsStub.readFile).be.calledOnce();
-      should(fsStub.readFile).be.calledWith('./path/to/file.rb', 'utf8');
+      should(fsMock.readFile).be.calledOnce();
+      should(fsMock.readFile).be.calledWith('./path/to/file.rb', 'utf8');
       should(file.content).be.eql('puts "Hello"');
     });
 
     // rewire console.log and process.exit
     it('exit the program if the file is not readable', async () => {
-      fsStub.readFile.rejects(new Error('Not readable'));
+      fsMock.readFile.rejects(new Error('Not readable'));
       const file = new File('./path/to/file.rb');
 
       await file.read();
 
-      should(consoleStub.error).be.calledOnce();
-      should(consoleStub.error.firstCall.args[0]).be.instanceOf(Error);
-      should(processStub.exit).be.calledWith(1);
+      should(consoleMock.error).be.calledOnce();
+      should(consoleMock.error.firstCall.args[0]).be.instanceOf(Error);
+      should(processMock.exit).be.calledWith(1);
     });
   });
 
@@ -77,16 +77,16 @@ describe('File', () => {
 
       await file.write('puts "Hello"');
 
-      should(fsStub.access).be.calledOnce();
-      should(fsStub.access.firstCall.args[0]).be.eql('./path/to/file.rb');
-      should(fsStub.writeFile).be.calledOnce();
-      should(fsStub.writeFile).be.calledWith('./path/to/file.rb', 'puts "Hello"', 'utf8');
+      should(fsMock.access).be.calledOnce();
+      should(fsMock.access.firstCall.args[0]).be.eql('./path/to/file.rb');
+      should(fsMock.writeFile).be.calledOnce();
+      should(fsMock.writeFile).be.calledWith('./path/to/file.rb', 'puts "Hello"', 'utf8');
     });
 
     // Usage of done()
     it('throw an error if the file is not writable', done => {
       const file = new File('./path/to/file.rb');
-      fsStub.access.rejects(new Error('Not writable'));
+      fsMock.access.rejects(new Error('Not writable'));
 
 
       file.write('puts "Hello"')
@@ -102,14 +102,14 @@ describe('File', () => {
 
       await file.remove();
 
-      should(fsStub.unlink).be.calledOnce();
-      should(fsStub.unlink).be.calledWith('./path/to/file.rb');
+      should(fsMock.unlink).be.calledOnce();
+      should(fsMock.unlink).be.calledWith('./path/to/file.rb');
     });
 
     // Test rejected promise
     it('reject with an error if the file does not exists', () => {
       const file = new File('./path/to/file.rb');
-      fsStub.unlink.rejects(new Error('Not found'));
+      fsMock.unlink.rejects(new Error('Not found'));
 
       const promise = file.remove();
 

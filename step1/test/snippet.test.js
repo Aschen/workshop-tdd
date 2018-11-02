@@ -1,7 +1,10 @@
 const
   mockrequire = require('mock-require'),
+  rewire = require('rewire'),
   sinon = require('sinon'),
   should = require('should');
+
+require('should-sinon');
 
 describe('Snippet', () => {
   let
