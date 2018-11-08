@@ -15,18 +15,18 @@ describe('File', () => {
     File;
 
   beforeEach(() => {
-    fsMock = Object.assign({}, fs, {
+    fsMock = Object.assign(fs, {
       readFile: sinon.stub(),
       writeFile: sinon.stub(),
       unlink: sinon.stub(),
       access: sinon.stub()
     });
 
-    processMock = Object.assign({}, process, {
+    processMock = Object.assign(process, {
       exit: sinon.stub()
     });
 
-    consoleMock = Object.assign({}, console, {
+    consoleMock = Object.assign(console, {
       error: sinon.stub()
     });
 

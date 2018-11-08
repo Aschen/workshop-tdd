@@ -1,6 +1,6 @@
-const processMock = {
+const processMock = Object.assign(process, {
   exit: sinon.stub()
-};
+});
 
 const File = rewire('../lib/file');
 
